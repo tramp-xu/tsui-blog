@@ -1,14 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './Home'
 
-class Home extends Comment {
+class Home extends React.Component {
   render() {
     return (
-      Component(
-        <div>
-          Home
-        </div>
-      )
+      <div>
+        Home dddddddddd
+      </div>
     )
   }
 }

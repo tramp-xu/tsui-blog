@@ -1,23 +1,23 @@
-import React from 'react'
-import Navbar from "../navbar/Navbar";
-import { Route, Switch, Redirect } from "react-router-dom";
+import React from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { Layout, Button } from 'antd';
-import './layout.css'
+import Navbar from '../navbar/Navbar';
+import style from './layout.module.css';
 
-import Home from '../../routes/home/Home'
-import About from '../../routes/about/About'
-import NotFound from '../../routes/not-found'
+import Home from '../../routes/home/Home';
+import About from '../../routes/about/About';
+import NotFound from '../../routes/not-found';
 
 const { Header, Sider, Content } = Layout;
 
 class TsuiLayout extends React.Component {
   state = {
-    collapsed: false,
+    collapsed: false
   };
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed,
+      collapsed: !this.state.collapsed
     });
   }
 
@@ -25,29 +25,43 @@ class TsuiLayout extends React.Component {
     return (
       <Layout className="tsui-layout">
         <Sider
-          trigger={null}
-          collapsible
           collapsed={this.state.collapsed}
+          collapsible
+          trigger={null}
         >
           <Navbar></Navbar>
         </Sider>
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }}>
             <Button
-              className="trigger-btn"
-              type="primary"
+              className={style['trigger-btn']}
               icon={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
-            ></Button>
+              type="primary"
+            >
+            </Button>
           </Header>
           <Content style={{
-            margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280,
+            margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280
           }}
           >
             <Switch>
-              <Route path="/" exact component={Home}></Route>
-              <Route path="/about" component={About}></Route>
-              <Route path="/404" component={NotFound}></Route>
+              <Route
+                component={Home}
+                exact
+                path="/"
+              >
+              </Route>
+              <Route
+                component={About}
+                path="/about"
+              >
+              </Route>
+              <Route
+                component={NotFound}
+                path="/404"
+              >
+              </Route>
               <Redirect to="/404"></Redirect>
             </Switch>
           </Content>
@@ -55,6 +69,8 @@ class TsuiLayout extends React.Component {
       </Layout>
     );
   }
+
+
 }
 
-export default TsuiLayout 
+export default TsuiLayout;

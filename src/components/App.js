@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { HashRouter } from 'react-router-dom';
-import Layout from "./layout/Layout";
+import Layout from './layout/Layout';
 import './App.css';
 
 class App extends Component {
-  render() {
+  render () {
     return (
       <HashRouter>
         <Layout></Layout>

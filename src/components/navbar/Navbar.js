@@ -1,25 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
-import './Navbar.css'
+import './Navbar.css';
 
 class Navbar extends React.Component {
   state = {
-    current: 'mail',
+    current: 'mail'
   }
 
   handleClick = (e) => {
     console.log('click ', e);
     this.setState({
-      current: e.key,
+      current: e.key
     });
   }
 
-  render() {
+  render () {
     return (
       <div>
         <div className="logo">Logo</div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+        <Menu defaultSelectedKeys={['1']}
+          mode="inline"
+          theme="dark"
+        >
           <Menu.Item key="1">
             <Link to="/">
               <Icon type="user" />
@@ -44,4 +47,4 @@ class Navbar extends React.Component {
   }
 }
 
-export default Navbar
+export default Navbar;

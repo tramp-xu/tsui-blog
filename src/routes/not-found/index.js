@@ -6,7 +6,7 @@ class NotFound extends React.Component {
       <div>
         404 oops!
       </div>
-    )
+    );
   }
 }
 export default NotFound;

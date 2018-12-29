@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { HashRouter } from 'react-router-dom';
-import Layout from './layout/Layout';
+import TsuiRouter from '../router.js';
 import './App.css';
 
 class App extends Component {
   render () {
     return (
       <HashRouter>
-        <Layout></Layout>
+        <TsuiRouter></TsuiRouter>
       </HashRouter>
     );
   }

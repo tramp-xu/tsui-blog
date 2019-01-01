@@ -22,6 +22,7 @@ class TsuiLayout extends React.Component {
   }
 
   render() {
+    let { match } = this.props;
     return (
       <Layout className="tsui-layout">
         <Sider
@@ -49,20 +50,14 @@ class TsuiLayout extends React.Component {
               <Route
                 component={Home}
                 exact
-                path="/"
+                path={`${match.path}/home`}
               >
               </Route>
               <Route
                 component={About}
-                path="/about"
+                path={`${match.path}/about`}
               >
               </Route>
-              <Route
-                component={NotFound}
-                path="/404"
-              >
-              </Route>
-              <Redirect to="/404"></Redirect>
             </Switch>
           </Content>
         </Layout>

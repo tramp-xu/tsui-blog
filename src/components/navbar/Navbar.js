@@ -24,19 +24,19 @@ class Navbar extends React.Component {
           theme="dark"
         >
           <Menu.Item key="1">
-            <Link to="/">
+            <Link to="/back/home">
               <Icon type="user" />
               <span>Dashboard</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link to="/about">
+            <Link to="/back/about">
               <Icon type="video-camera" />
               <span>标签管理</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="3">
-            <Link to="/contact">
+            <Link to="/back/contact">
               <Icon type="upload" />
               <span>文章编辑</span>
             </Link>

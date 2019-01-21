@@ -1,12 +1,14 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Layout, Button } from 'antd';
 import Navbar from '../navbar/Navbar';
 import style from './layout.module.css';
 
-import Home from '../../routes/home/Home';
+import Home from '../../routes/home';
 import About from '../../routes/about/About';
-import NotFound from '../../routes/not-found';
+import Demo from '../../routes/demo/Demo';
+import Tag from '../../routes/tag';
+// import NotFound from '../../routes/not-found';
 
 const { Header, Sider, Content } = Layout;
 
@@ -54,8 +56,20 @@ class TsuiLayout extends React.Component {
               >
               </Route>
               <Route
+                component={Tag}
+                exact
+                path={`${match.path}/tag`}
+              >
+              </Route>
+              <Route
                 component={About}
                 path={`${match.path}/about`}
+              >
+              </Route>
+              <Route
+                component={Demo}
+                exact
+                path={`${match.path}/demo`}
               >
               </Route>
             </Switch>

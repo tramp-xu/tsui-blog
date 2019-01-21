@@ -25,7 +25,7 @@ class TsuiRouter extends React.Component {
           path="/back"
         >
         </Route>
-        <Redirect to="/404"></Redirect>
+        <Redirect to="/login"></Redirect>
       </Switch>
     );
   }

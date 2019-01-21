@@ -1,13 +1,15 @@
 import React from 'react';
-import './Home.css';
+import './Demo.css';
 import Login from './renderProps/login';
 import Auth from './renderProps/Auth';
 import Page from './providerPatttern/page';
 import {ThemeProvider} from './providerPatttern/context';
 import TabDemo from './compoundCpt/TabDemo';
-import style from './watch/watch.css';
+// import Counter from './redux/Counter';
+import CounterDemo from './redux/Demo';
+// import style from './watch/watch.css';
 
-class Home extends React.Component {
+class Demo extends React.Component {
   render() {
     return (
       <div>
@@ -23,9 +25,11 @@ class Home extends React.Component {
           <Page />
         </ThemeProvider>
         <div className="title">fgasgsdg</div>
+        <CounterDemo></CounterDemo>
+        {/* <Counter></Counter> */}
       </div>
     );
   }
 }
 
-export default Home;
+export default Demo;

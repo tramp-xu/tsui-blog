@@ -5,7 +5,7 @@ import './Navbar.css';
 
 class Navbar extends React.Component {
   state = {
-    current: 'mail'
+    current: '1'
   }
 
   handleClick = (e) => {
@@ -26,19 +26,31 @@ class Navbar extends React.Component {
           <Menu.Item key="1">
             <Link to="/back/home">
               <Icon type="user" />
-              <span>nav 1</span>
+              <span>Home</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link to="/back/about">
-              <Icon type="video-camera" />
-              <span>nav 2</span>
+            <Link to="/back/tags">
+              <Icon type="tags" />
+              <span>标签管理 (Tags)</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="3">
+            <Link to="/back/about">
+              <Icon type="video-camera" />
+              <span>About</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="4">
             <Link to="/back/contact">
               <Icon type="upload" />
-              <span>nav 3</span>
+              <span>Contact</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="5">
+            <Link to="/back/demo">
+              <Icon type="upload" />
+              <span>Demo</span>
             </Link>
           </Menu.Item>
         </Menu>

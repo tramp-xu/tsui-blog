@@ -5,49 +5,52 @@ import './Navbar.css';
 
 class Navbar extends React.Component {
   state = {
-    current: '1'
+    defaultSelectedKeys: ['home']
   }
 
-  handleClick = (e) => {
-    console.log('click ', e);
-    this.setState({
-      current: e.key
-    });
+  handlerPath = (location) => {
+    let names = location.split('/');
+    let name = names[names.length - 1];
+    return [name];
   }
+
 
   render () {
+    let {location} = this.props;
     return (
       <div>
         <div className="logo">Logo</div>
-        <Menu defaultSelectedKeys={['1']}
+        <Menu
+          defaultSelectedKeys={this.handlerPath(location)}
           mode="inline"
+          // selectedKeys={this.state.selectedKeys}
           theme="dark"
         >
-          <Menu.Item key="1">
+          <Menu.Item key="home">
             <Link to="/back/home">
               <Icon type="user" />
               <span>Home</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="2">
-            <Link to="/back/tags">
+          <Menu.Item key="tag">
+            <Link to="/back/tag">
               <Icon type="tags" />
               <span>标签管理 (Tags)</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="3">
+          <Menu.Item key="about">
             <Link to="/back/about">
               <Icon type="video-camera" />
               <span>About</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="4">
+          <Menu.Item key="contact">
             <Link to="/back/contact">
               <Icon type="upload" />
               <span>Contact</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="5">
+          <Menu.Item key="demo">
             <Link to="/back/demo">
               <Icon type="upload" />
               <span>Demo</span>

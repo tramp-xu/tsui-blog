@@ -24,7 +24,8 @@ class TsuiLayout extends React.Component {
   }
 
   render() {
-    let { match } = this.props;
+    let { match, location } = this.props;
+    console.log(this.props);
     return (
       <Layout className="tsui-layout">
         <Sider
@@ -32,7 +33,7 @@ class TsuiLayout extends React.Component {
           collapsible
           trigger={null}
         >
-          <Navbar></Navbar>
+          <Navbar location={location.pathname}></Navbar>
         </Sider>
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }}>

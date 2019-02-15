@@ -4,10 +4,10 @@ import { Layout, Button } from 'antd';
 import Navbar from '../navbar/Navbar';
 import style from './layout.module.css';
 
-import Home from '../../routes/home';
-import About from '../../routes/about/About';
-import Demo from '../../routes/demo/Demo';
-import Tag from '../../routes/tag';
+import Home from '../../views/home';
+import Tag from '../../views/tag';
+import Article from '../../views/article';
+import Write from '../../views/write';
 // import NotFound from '../../routes/not-found';
 
 const { Header, Sider, Content } = Layout;
@@ -25,7 +25,6 @@ class TsuiLayout extends React.Component {
 
   render() {
     let { match, location } = this.props;
-    console.log(this.props);
     return (
       <Layout className="tsui-layout">
         <Sider
@@ -45,10 +44,7 @@ class TsuiLayout extends React.Component {
             >
             </Button>
           </Header>
-          <Content style={{
-            margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280
-          }}
-          >
+          <Content className={style['layout-content-main']}>
             <Switch>
               <Route
                 component={Home}
@@ -63,14 +59,14 @@ class TsuiLayout extends React.Component {
               >
               </Route>
               <Route
-                component={About}
-                path={`${match.path}/about`}
+                component={Article}
+                path={`${match.path}/article`}
               >
               </Route>
               <Route
-                component={Demo}
+                component={Write}
                 exact
-                path={`${match.path}/demo`}
+                path={`${match.path}/write`}
               >
               </Route>
             </Switch>

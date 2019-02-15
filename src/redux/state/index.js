@@ -1,5 +1,5 @@
 const initState = {
-  count: ''
+  user: ''
 };
 
 export default initState;

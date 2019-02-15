@@ -1,3 +1,11 @@
 .trigger-btn {
   margin-left: 10px;
 }
+
+.layout-content-main {
+  margin: 24px 16px;
+  padding: 24px;
+  background-color: #fff;
+  min-height: 280;
+  overflow: auto;
+}

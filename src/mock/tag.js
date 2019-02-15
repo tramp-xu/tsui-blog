@@ -2,7 +2,7 @@ import Mock from 'mockjs';
 
 const Random = Mock.Random;
 
-export const response = function() {
+export const searchTagRes = function() {
   let tags = [];
   for (let i = 0; i < 20; i++) {
     let newArticleObject = {
@@ -20,5 +20,19 @@ export const response = function() {
     code: 200,
     data: tags,
     message: 'success'
+  };
+};
+
+export const addTagRes = () => {
+  return {
+    code: 100,
+    message: 'success'
+  };
+};
+
+export const saveTagRes = () => {
+  return {
+    code: 100,
+    message: '保存失败，标签名重复'
   };
 };

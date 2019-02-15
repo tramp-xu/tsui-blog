@@ -38,16 +38,16 @@ class Navbar extends React.Component {
               <span>标签管理 (Tags)</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="about">
-            <Link to="/back/about">
+          <Menu.Item key="article">
+            <Link to="/back/article">
               <Icon type="video-camera" />
-              <span>About</span>
+              <span>文章管理</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="contact">
-            <Link to="/back/contact">
+          <Menu.Item key="write">
+            <Link to="/back/write">
               <Icon type="upload" />
-              <span>Contact</span>
+              <span>新建文章</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="demo">

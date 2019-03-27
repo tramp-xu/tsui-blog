@@ -21,7 +21,7 @@ class LoginForm extends React.Component {
       const user = res.user;
       this.props.dispatch(login(user));
       localStorage.token = res.data.token;
-      localStorage.user = res.data.user;
+      localStorage.user = JSON.stringify(res.data.user);
       this.setState({
         loginSucess: true,
         loading: false
@@ -34,16 +34,13 @@ class LoginForm extends React.Component {
   }
 
   handleSubmit = (e) => {
-    this.setState({
-      loading: true
-    });
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        this.setState({
+          loading: true
+        });
         this.onLogin(values);
-        // this.setState({
-        //   loginSucess: true
-        // });
       }
     });
   }

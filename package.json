@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.11.0",
     "axios": "^0.18.0",
+    "braft-editor": "^2.2.5",
     "lodash": "^4.17.11",
     "qs": "^6.6.0",
     "react": "^16.6.3",
@@ -50,5 +51,5 @@
     "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.11.0"
   },
-  "proxy": "http://localhost:9527"
+  "proxy": "http://localhost:8000"
 }

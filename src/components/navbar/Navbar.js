@@ -50,12 +50,6 @@ class Navbar extends React.Component {
               <span>新建文章</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="demo">
-            <Link to="/back/demo">
-              <Icon type="upload" />
-              <span>Demo</span>
-            </Link>
-          </Menu.Item>
         </Menu>
       </div>
     );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Popconfirm, Input, message } from 'antd';
+import { Table, Popconfirm, Input, message, Spin } from 'antd';
 import EditableContext from './src/context';
 import EditableFormRow from './src/editableRow';
 import EditableCell from './src/editableCell';
@@ -29,6 +29,7 @@ const columnsOpt = [
 
 class Tag extends React.Component {
   state = {
+    loading: false,
     records: [],
     editingId: '',
     curPage: 1,
@@ -67,7 +68,7 @@ class Tag extends React.Component {
               ) : (
                 <div className="g_flex-between">
                   <i
-                    className="iconfont g_cursor-pointer g_hover-primary"
+                    className="anticon_user g_cursor-pointer g_hover-primary"
                     onClick={() => this.edit(record._id)}
                   >&#xe8cf;</i>
 
@@ -77,7 +78,7 @@ class Tag extends React.Component {
                     title="所有含有此标签的文章将删除此标签"
                   >
                     <i
-                      className="iconfont g_cursor-pointer g_hover-primary"
+                      className="anticon_user g_cursor-pointer g_hover-primary"
                     >&#xe613;</i>
                   </Popconfirm>
                 </div>
@@ -94,12 +95,16 @@ class Tag extends React.Component {
   }
 
   getTag = async (page) => {
+    this.setState({
+      loading: true
+    });
     let req = {
       pageSize: 10,
       curPage: page
     };
     let res = await _getTag(req);
     this.setState({
+      loading: false,
       records: res.data.list,
       total: res.data.count,
       curPage: res.data.curPage
@@ -119,8 +124,6 @@ class Tag extends React.Component {
       if (error) {
         return;
       }
-      console.log(_id);
-      console.log(row);
       await _editTag({
         _id,
         ...row
@@ -156,11 +159,7 @@ class Tag extends React.Component {
       message.error('新建标签名不能为空');
       return;
     }
-    try {
-      await _addTag({name: value});
-    } catch (e) {
-      console.log(e);
-    }
+    await _addTag({name: value});
     this.getTag(1);
   }
 
@@ -192,24 +191,26 @@ class Tag extends React.Component {
       };
     });
     return (
-      <div className="tag-box">
-        <Search
-          className="add-btn-wrap"
-          enterButton="添加标签"
-          onSearch={value => this.addTag(value)}
-          placeholder="新建标签名"
-          size="large"
-        />
+      <Spin spinning={this.state.loading}>
+        <div className="tag-box">
+          <Search
+            className="add-btn-wrap"
+            enterButton="添加标签"
+            onSearch={value => this.addTag(value)}
+            placeholder="新建标签名"
+            size="large"
+          />
 
-        <Table
-          bordered
-          columns={columns}
-          components={components}
-          dataSource={this.state.records}
-          pagination={{pageSize: 10, current: this.state.curPage, onChange: this.pageChange, total: this.state.total}}
-          rowKey={record => record._id}
-        />
-      </div>
+          <Table
+            bordered
+            columns={columns}
+            components={components}
+            dataSource={this.state.records}
+            pagination={{pageSize: 10, current: this.state.curPage, onChange: this.pageChange, total: this.state.total}}
+            rowKey={record => record._id}
+          />
+        </div>
+      </Spin>
     );
   }
 }

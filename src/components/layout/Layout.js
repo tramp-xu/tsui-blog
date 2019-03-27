@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Layout, Button } from 'antd';
 import Navbar from '../navbar/Navbar';
-import style from './layout.module.css';
+import './layout.css';
 
 import Home from '../../views/home';
 import Tag from '../../views/tag';
@@ -37,14 +37,14 @@ class TsuiLayout extends React.Component {
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }}>
             <Button
-              className={style['trigger-btn']}
+              className="trigger-btn"
               icon={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
               type="primary"
             >
             </Button>
           </Header>
-          <Content className={style['layout-content-main']}>
+          <Content className="layout-content-main">
             <Switch>
               <Route
                 component={Home}

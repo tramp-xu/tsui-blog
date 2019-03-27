@@ -1,5 +1,5 @@
 import Mock from 'mockjs';
-import {articleList} from './about';
+import {articleList} from './atricle';
 
 import {searchTagRes, addTagRes, saveTagRes} from './tag';
 import {loginRes} from './login';

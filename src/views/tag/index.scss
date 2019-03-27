@@ -1,6 +1,35 @@
-.tag-box {
-  .add-btn-wrap {
-    width: 400px;
-    margin-bottom: 20px;
+.write-wrapper {
+
+  .sub-title-tip {
+    margin: 0 2px;
   }
-} 
+
+  .tag-wrap {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .label {
+      margin-right: 10px;
+    }
+    .select {
+      flex: 1;
+    }
+
+    .ant-select-selection--multiple .ant-select-selection__choice {
+      background-color: #1890ff;
+      color: #fff;
+    }
+    .ant-select-selection--multiple .ant-select-selection__choice__remove {
+      color: #fff;
+    }
+  }
+
+  .btn-wrap {
+    margin-top: 20px;
+    .ant-btn {
+      margin-right: 10px;
+    }
+  }
+}

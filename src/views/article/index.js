@@ -1,34 +1,29 @@
 import React from 'react';
-import { Table, Popconfirm, Input, message } from 'antd';
+import { Table, Popconfirm, Spin } from 'antd';
 import EditableContext from './src/context';
 import EditableFormRow from './src/editableRow';
 import EditableCell from './src/editableCell';
 
 import './index.scss';
-import {_getTag, _addTag, _editTag, _deleteTag} from '@/apis/tag';
+import {_getArticle, _editArticleTitle, _deleteArticle} from '@/apis/article';
 
-const Search = Input.Search;
 const columnsOpt = [
   {
-    title: '标签名',
-    dataIndex: 'name',
-    key: 'name',
+    title: '标题',
+    dataIndex: 'title',
+    key: 'title',
     editable: true
   },
   {
     title: '创建时间',
     dataIndex: 'createDate',
     key: 'createDate'
-  },
-  {
-    title: '关联文章数',
-    dataIndex: 'relatedCount',
-    key: 'relatedCount'
   }
 ];
 
-class Tag extends React.Component {
+class Article extends React.Component {
   state = {
+    loading: false,
     records: [],
     editingId: '',
     curPage: 1,
@@ -36,7 +31,26 @@ class Tag extends React.Component {
     columns: [
       ...columnsOpt,
       {
-        title: '编辑标签',
+        title: '标签',
+        dataIndex: 'tags',
+        key: 'tags',
+        render: (text, record) => {
+          let {tags} = record;
+          tags = tags || [];
+          return (
+            tags.map(item => {
+              return (
+                <span
+                  className="tag-block"
+                  key={item}
+                >{item}</span>
+              );
+            })
+          );
+        }
+      },
+      {
+        title: '操 作',
         key: 'operation',
         width: '120px',
         render: (text, record) => {
@@ -67,17 +81,17 @@ class Tag extends React.Component {
               ) : (
                 <div className="g_flex-between">
                   <i
-                    className="iconfont g_cursor-pointer g_hover-primary"
+                    className="anticon_user g_cursor-pointer g_hover-primary"
                     onClick={() => this.edit(record._id)}
                   >&#xe8cf;</i>
 
                   <Popconfirm
                     onConfirm={() => this.delete(record._id)}
                     placement="topRight"
-                    title="所有含有此标签的文章将删除此标签"
+                    title="确定删除此文章？"
                   >
                     <i
-                      className="iconfont g_cursor-pointer g_hover-primary"
+                      className="anticon_user g_cursor-pointer g_hover-primary"
                     >&#xe613;</i>
                   </Popconfirm>
                 </div>
@@ -90,16 +104,20 @@ class Tag extends React.Component {
   }
 
   componentDidMount () {
-    this.getTag(1);
+    this.getArticle(1);
   }
 
-  getTag = async (page) => {
+  getArticle = async (page) => {
+    this.setState({
+      loading: true
+    });
     let req = {
       pageSize: 10,
       curPage: page
     };
-    let res = await _getTag(req);
+    let res = await _getArticle(req);
     this.setState({
+      loading: false,
       records: res.data.list,
       total: res.data.count,
       curPage: res.data.curPage
@@ -114,14 +132,16 @@ class Tag extends React.Component {
     });
   }
 
+  edit = (key) => {
+    this.setState({ editingId: key });
+  }
+
   save = (form, _id) => {
     form.validateFields(async (error, row) => {
       if (error) {
         return;
       }
-      console.log(_id);
-      console.log(row);
-      await _editTag({
+      await _editArticleTitle({
         _id,
         ...row
       });
@@ -141,31 +161,13 @@ class Tag extends React.Component {
     });
   }
 
-  edit = (key) => {
-    this.setState({ editingId: key });
-  }
-
   delete = async (_id) => {
-    let res = await _deleteTag({_id});
-    message.success(res.message);
-    this.getTag(this.state.curPage);
-  }
-
-  addTag = async (value) => {
-    if (!value) {
-      message.error('新建标签名不能为空');
-      return;
-    }
-    try {
-      await _addTag({name: value});
-    } catch (e) {
-      console.log(e);
-    }
-    this.getTag(1);
+    await _deleteArticle({_id});
+    this.getArticle(this.state.curPage);
   }
 
   pageChange= (page) => {
-    this.getTag(page);
+    this.getArticle(page);
   }
 
   render() {
@@ -184,7 +186,7 @@ class Tag extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: col.dataIndex === 'tagLevel' ? 'number' : 'text',
+          inputType: 'text',
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record)
@@ -192,26 +194,22 @@ class Tag extends React.Component {
       };
     });
     return (
-      <div className="tag-box">
-        <Search
-          className="add-btn-wrap"
-          enterButton="添加标签"
-          onSearch={value => this.addTag(value)}
-          placeholder="新建标签名"
-          size="large"
-        />
-
-        <Table
-          bordered
-          columns={columns}
-          components={components}
-          dataSource={this.state.records}
-          pagination={{pageSize: 10, current: this.state.curPage, onChange: this.pageChange, total: this.state.total}}
-          rowKey={record => record._id}
-        />
-      </div>
+      <Spin spinning={this.state.loading}
+        tip="Loading..."
+      >
+        <div className="article-box">
+          <Table
+            bordered
+            columns={columns}
+            components={components}
+            dataSource={this.state.records}
+            pagination={{pageSize: 10, current: this.state.curPage, onChange: this.pageChange, total: this.state.total}}
+            rowKey={record => record._id}
+          />
+        </div>
+      </Spin>
     );
   }
 }
 
-export default Tag;
+export default Article;

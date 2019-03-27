@@ -1,217 +1,187 @@
-import React from 'react';
-import { Table, Popconfirm, Input, message } from 'antd';
-import EditableContext from './src/context';
-import EditableFormRow from './src/editableRow';
-import EditableCell from './src/editableCell';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import {Select, Button, message, Form, Input, Tooltip, Icon, Spin, Modal} from 'antd';
+import BraftEditor from 'braft-editor';
+import {_getTag} from '@/apis/tag';
+import {_publishArticle} from '@/apis/article';
 
+import 'braft-editor/dist/index.css';
 import './index.scss';
-import {_getTag, _addTag, _editTag, _deleteTag} from '@/apis/tag';
 
-const Search = Input.Search;
-const columnsOpt = [
-  {
-    title: '标签名',
-    dataIndex: 'name',
-    key: 'name',
-    editable: true
-  },
-  {
-    title: '创建时间',
-    dataIndex: 'createDate',
-    key: 'createDate'
-  },
-  {
-    title: '关联文章数',
-    dataIndex: 'relatedCount',
-    key: 'relatedCount'
-  }
-];
+const Option = Select.Option;
+const confirm = Modal.confirm;
 
-class Tag extends React.Component {
+export class Write extends Component {
   state = {
-    records: [],
-    editingId: '',
-    curPage: 1,
-    total: '',
-    columns: [
-      ...columnsOpt,
-      {
-        title: '编辑标签',
-        key: 'operation',
-        width: '120px',
-        render: (text, record) => {
-          const editable = this.isEditing(record);
-          return (
-            <div>
-              {editable ? (
-                <div className="g_flex-between">
-                  <EditableContext.Consumer>
-                    {
-                      form => (
-                        <span
-                          className="g_cursor-pointer g_hover-primary"
-                          onClick={() => this.save(form, record._id)}
-                        >
-                          Save
-                        </span>
-                      )
-                    }
-                  </EditableContext.Consumer>
-                  <Popconfirm
-                    onConfirm={() => this.cancel(record._id)}
-                    title="Sure to cancel"
-                  >
-                    <span className="g_cursor-pointer g_hover-primary">Cancel</span>
-                  </Popconfirm>
-                </div>
-              ) : (
-                <div className="g_flex-between">
-                  <i
-                    className="iconfont g_cursor-pointer g_hover-primary"
-                    onClick={() => this.edit(record._id)}
-                  >&#xe8cf;</i>
-
-                  <Popconfirm
-                    onConfirm={() => this.delete(record._id)}
-                    placement="topRight"
-                    title="所有含有此标签的文章将删除此标签"
-                  >
-                    <i
-                      className="iconfont g_cursor-pointer g_hover-primary"
-                    >&#xe613;</i>
-                  </Popconfirm>
-                </div>
-              )}
-            </div>
-          );
-        }
-      }
-    ]
+    loading: false,
+    editorState: BraftEditor.createEditorState(null),
+    tags: [],
+    options: null,
+    selectedTags: null,
+    formItemLayout: 'vertical'
   }
-
   componentDidMount () {
-    this.getTag(1);
+    this.getTag();
   }
-
-  getTag = async (page) => {
-    let req = {
-      pageSize: 10,
-      curPage: page
-    };
-    let res = await _getTag(req);
-    this.setState({
-      records: res.data.list,
-      total: res.data.count,
-      curPage: res.data.curPage
-    });
-  }
-
-  isEditing = record => record._id === this.state.editingId
-
-  cancel = () => {
-    this.setState({
-      editingId: ''
-    });
-  }
-
-  save = (form, _id) => {
-    form.validateFields(async (error, row) => {
-      if (error) {
-        return;
-      }
-      console.log(_id);
-      console.log(row);
-      await _editTag({
-        _id,
-        ...row
+  getTag = async () => {
+    let res = await _getTag();
+    let list = res.data.list;
+    let children = [];
+    if (list && list.length) {
+      list.forEach(element => {
+        children.push(<Option key={element.name}>{element.name}</Option>);
       });
-      const newData = [...this.state.records];
-      const index = newData.findIndex(item => _id === item._id);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row
-        });
-        this.setState({ records: newData, editingId: '' });
+    }
+    this.setState({
+      tags: res.data.list,
+      options: children
+    });
+  }
+  changeTag = (value) => {
+    this.setState({
+      selectedTags: value
+    });
+  }
+  handleSubmit = () => {
+    this.props.form.validateFields((err, values) => {
+      if (err) {
+        return;
       } else {
-        newData.push(row);
-        this.setState({ records: newData, editingId: '' });
+        this.publicArticl(values);
       }
     });
   }
-
-  edit = (key) => {
-    this.setState({ editingId: key });
-  }
-
-  delete = async (_id) => {
-    let res = await _deleteTag({_id});
-    message.success(res.message);
-    this.getTag(this.state.curPage);
-  }
-
-  addTag = async (value) => {
-    if (!value) {
-      message.error('新建标签名不能为空');
+  publicArticl = async (values) => {
+    const text = this.state.editorState.toText();
+    if (!text) {
+      message.warning('文章不能为空');
       return;
     }
-    try {
-      await _addTag({name: value});
-    } catch (e) {
-      console.log(e);
-    }
-    this.getTag(1);
-  }
-
-  pageChange= (page) => {
-    this.getTag(page);
-  }
-
-  render() {
-    const components = {
-      body: {
-        row: EditableFormRow,
-        cell: EditableCell
-      }
-    };
-
-    const columns = this.state.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: record => ({
-          record,
-          inputType: col.dataIndex === 'tagLevel' ? 'number' : 'text',
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(record)
-        })
-      };
+    this.setState({
+      loading: true
     });
+    const htmlContent = this.state.editorState.toHTML();
+    await _publishArticle({
+      content: htmlContent,
+      tags: this.state.selectedTags,
+      ...values
+    });
+    this.setState({
+      loading: false
+    });
+    const _this = this;
+    confirm({
+      title: '提示',
+      content: '再写一篇？',
+      onOk() {
+        _this.props.form.resetFields();
+        _this.setState({
+          editorState: BraftEditor.createEditorState(null),
+          tags: [],
+          options: null,
+          selectedTags: null
+        });
+        setTimeout(() => {
+          let dom = document.querySelector('.layout-content-main');
+          dom.scrollTop = 0;
+        }, 100);
+      }
+    });
+  }
+  handleEditorChange = (editorState) => {
+    this.setState({
+      editorState: editorState
+    });
+  }
+  render() {
+    const { editorState, options, formItemLayout } = this.state;
+    const { getFieldDecorator } = this.props.form;
     return (
-      <div className="tag-box">
-        <Search
-          className="add-btn-wrap"
-          enterButton="添加标签"
-          onSearch={value => this.addTag(value)}
-          placeholder="新建标签名"
-          size="large"
-        />
+      <div
+        className="write-wrapper"
+      >
+        <Spin
+          spinning={this.state.loading}
+          tip="Loading..."
+        >
+          <Form className="login-form"
+            onSubmit={this.handleSubmit}
 
-        <Table
-          bordered
-          columns={columns}
-          components={components}
-          dataSource={this.state.records}
-          pagination={{pageSize: 10, current: this.state.curPage, onChange: this.pageChange, total: this.state.total}}
-          rowKey={record => record._id}
-        />
+          >
+            <Form.Item
+              {...formItemLayout}
+              label="文章标题"
+            >
+              {
+                getFieldDecorator('title', {
+                  rules: [{ required: true, message: 'Please input your title!' }]
+                })(
+                  <Input
+                    placeholder="标题"
+                  />)
+              }
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label={(
+                <span>
+                文章子标题
+                  <Tooltip
+                    placement="topLeft"
+                    title="文章子标题，主要用于列表展示"
+                  >
+                    <Icon
+                      className="sub-title-tip"
+                      type="info-circle"
+                    />
+                  </Tooltip>
+                </span>
+              )}
+            >
+              {
+                getFieldDecorator('subTitle', {
+                  rules: [{ required: true, message: 'Please input your sub title!' }]
+                })(
+                  <Input
+                    placeholder="子标题"
+                  />)
+              }
+            </Form.Item>
+          </Form>
+          <BraftEditor
+            onChange={this.handleEditorChange}
+            value={editorState}
+          />
+          <div className="tag-wrap">
+            <div className="label">
+            请添加文章标签
+            </div>
+            <Select
+              className="select"
+              mode="multiple"
+              onChange={this.changeTag}
+              size="large"
+            >{options}</Select>
+          </div>
+          <div className="btn-wrap">
+            <Button
+              onClick={this.handleSubmit}
+              size="large"
+              type="primary"
+            >发 布</Button>
+            {/* <Button
+              icon="save-fill"
+              size="large"
+              type="primary"
+            >保存到草稿</Button> */}
+          </div>
+        </Spin>
       </div>
     );
   }
 }
 
-export default Tag;
+let WriteWrap = Form.create({name: 'public'})(Write);
+WriteWrap = connect()(WriteWrap);
+
+export default WriteWrap;

@@ -61,7 +61,7 @@ export class Write extends Component {
       loading: true
     });
     const htmlContent = this.state.editorState.toHTML();
-    await _publishArticle({
+    let res = await _publishArticle({
       content: htmlContent,
       tags: this.state.selectedTags,
       ...values
@@ -69,6 +69,7 @@ export class Write extends Component {
     this.setState({
       loading: false
     });
+    if (res.code !== 200) return;
     const _this = this;
     confirm({
       title: '提示',

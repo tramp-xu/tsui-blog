@@ -168,6 +168,7 @@ class Tag extends React.Component {
   }
 
   render() {
+    console.log('object');
     const components = {
       body: {
         row: EditableFormRow,
